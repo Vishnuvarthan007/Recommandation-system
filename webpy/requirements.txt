@@ -5,5 +5,4 @@ model_selection
 preprocessing 
 ensemble
 matplotlib
-pyplot 
 seaborn
