@@ -1,6 +1,6 @@
 streamlit
 pandas
-sklearn
+scikit-learn
 model_selection 
 preprocessing 
 ensemble
