@@ -1,6 +1,9 @@
 streamlit
 pandas
 sklearn
-sklearn
+model_selection 
+preprocessing 
+ensemble
 matplotlib
-seaborn 
+pyplot 
+seaborn
