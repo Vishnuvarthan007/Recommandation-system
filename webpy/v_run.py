@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load datasets
-petrol_data = pd.read_csv('weby/petrolcars.csv')
+petrol_data = pd.read_csv('webpy/petrolcars.csv')
 ev_data = pd.read_csv('webpy/Cheapestelectriccars-EVDatabase.csv')
 
 # Fill missing values with mean for each dataset
