@@ -1,8 +1,10 @@
+import streamlit as st
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Load datasets
 petrol_data = pd.read_csv('/content/petrolcars.csv')
@@ -26,28 +28,23 @@ X_petrol_scaled = scaler_petrol.fit_transform(X_petrol)
 scaler_ev = StandardScaler()
 X_ev_scaled = scaler_ev.fit_transform(X_ev)
 
-# Split the data into training and testing sets for each dataset
-X_train_petrol, X_test_petrol, y_train_petrol, y_test_petrol = train_test_split(
-    X_petrol_scaled, y_petrol, test_size=0.2, random_state=42
-)
-
-X_train_ev, X_test_ev, y_train_ev, y_test_ev = train_test_split(
-    X_ev_scaled, y_ev, test_size=0.2, random_state=42
-)
-
 # Train the RandomForestRegressor model for each dataset
 model_petrol = RandomForestRegressor()
-model_petrol.fit(X_train_petrol, y_train_petrol)
+model_petrol.fit(X_petrol_scaled, y_petrol)
 
 model_ev = RandomForestRegressor()
-model_ev.fit(X_train_ev, y_train_ev)
+model_ev.fit(X_ev_scaled, y_ev)
 
-# User input
-user_acceleration = float(input("Enter Acceleration: "))
-user_topspeed = float(input("Enter Top Speed: "))
-user_range = float(input("Enter Range: "))
-user_efficiency = float(input("Enter Efficiency: "))
-user_seats = float(input("Enter Number of Seats:"))
+# Streamlit app
+st.title('Electric Vehicle Recommender')
+
+# User input in the sidebar
+st.sidebar.header('User Input')
+user_acceleration = st.sidebar.number_input('Enter Acceleration:', min_value=0.0, step=0.1, value=8.0)
+user_topspeed = st.sidebar.number_input('Enter Top Speed:', min_value=0, value=180)
+user_range = st.sidebar.number_input('Enter Range:', min_value=0, value=300)
+user_efficiency = st.sidebar.number_input('Enter Efficiency:', min_value=0.0, step=0.1, value=20.0)
+user_seats = st.sidebar.number_input('Enter Number of Seats:', min_value=0, value=5)
 
 user_petrol_input = [user_acceleration, user_topspeed, user_range, user_efficiency, user_seats]
 
@@ -64,16 +61,18 @@ similar_ev_indices = (model_ev.predict(X_ev_scaled) - predicted_ev_price).argsor
 similar_ev_models = ev_data.loc[similar_ev_indices, 'CarModel']
 
 # Display the recommended EVs
-print("Top 10 Recommended EV Cars as alternatives to petrol/Diesel cars:")
+st.header("Top 10 Recommended EV Cars as alternatives to petrol/Diesel cars:")
 for ev_model in similar_ev_models:
-    print(ev_model)
+    st.write(ev_model)
 
-# Plotting comparison charts (similar to your original code)
+# Display feature comparison plots with dynamically changing colors
 features_to_compare = ['Acceleration', 'TopSpeed', 'Range', 'Efficiency', 'NumberofSeats', 'Price']
-for feature in features_to_compare:
+colors = sns.color_palette('husl', n_colors=len(similar_ev_models))
+
+for i, feature in enumerate(features_to_compare):
     plt.figure(figsize=(12, 6))
-    plt.bar(similar_ev_models, ev_data.loc[similar_ev_indices, feature])
+    plt.bar(similar_ev_models, ev_data.loc[similar_ev_indices, feature], color=colors[i])
     plt.title(f'Comparison of {feature} for Top 10 Recommended EV Cars')
     plt.xlabel('Car Model')
     plt.ylabel(feature)
-    plt.show()
+    st.pyplot(plt)
