@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 petrol_data = pd.read_csv('webpy/petrolcars.csv')
 ev_data = pd.read_csv('webpy/Cheapestelectriccars-EVDatabase.csv')
-combined_data = pd.concat([petrol_data, ev_data], ignore_index=True)
+
 combined_data.fillna(combined_data.select_dtypes(include='number').mean(), inplace=True)
 X = combined_data[['Acceleration', 'TopSpeed', 'Range', 'Efficiency', 'NumberofSeats']]
 y = combined_data['Price']
