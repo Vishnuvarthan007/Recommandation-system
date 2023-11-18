@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load datasets
-petrol_data = pd.read_csv('/content/petrolcars.csv')
-ev_data = pd.read_csv('/content/Cheapestelectriccars-EVDatabase.csv')
+petrol_data = pd.read_csv('petrolcars.csv')
+ev_data = pd.read_csv('Cheapestelectriccars-EVDatabase.csv')
 
 # Fill missing values with mean for each dataset
 petrol_data.fillna(petrol_data.select_dtypes(include='number').mean(), inplace=True)
